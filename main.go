@@ -1,42 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-)
-
-func goRoutine(s string,  wg *sync.WaitGroup) {
-	defer wg.Done() // decrement wg by one after this function completes
-	println(s)
-}
+import "sync"
 
 func main() {
-	var wg sync.WaitGroup
-	words := []string{
-		"alpha",
-		"beta",
-		"gamma",
-		"delta",
-		"epsilon",
-		"zeta",
-		"eta",
-		"theta",
-		"iota",
-		"kappa",
-		"lambda",
-		"mu",
-		"nu",
-	}
+	w := sync.WaitGroup{}
+	myArray := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	w.Add(len(myArray))
+	go func() {
 
 
-	wg.Add(len(words))
+		for _, index := range myArray {
+			defer w.Done()
+			println("Go routine", index)
+		}
 
-	for i, s := range words {
-		goRoutine(fmt.Sprintf("%d: %s", i, s), &wg)
-	}
-
-	wg.Wait()
-
-	wg.Add(1)
-	goRoutine("Second thing to be printed!", &wg)
+	}()
+	w.Wait()
+	print("Main routine")
 }
