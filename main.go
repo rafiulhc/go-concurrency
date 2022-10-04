@@ -1,20 +1,28 @@
 package main
 
-import "sync"
+import (
+	"fmt"
+)
+
+func printSomething(s string) {
+	fmt.Println(s)
+}
 
 func main() {
-	w := sync.WaitGroup{}
-	myArray := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	w.Add(len(myArray))
-	go func() {
+	// if you run the program with this line uncommented, and the lines 20 commented,
+	// everything works as expected
+	printSomething("This is the first thing to be printed!")
 
+	// but if you comment out line 15 and uncomment the one below this comment,
+	// running the program will (probably) just print out the final message,
+	// since the program terminates before the goroutine started by this
+	// command does not have time to finish.
+	//go printSomething("This is the first thing to be printed!")
 
-		for _, index := range myArray {
-			defer w.Done()
-			println("Go routine", index)
-		}
+	// in order to give the goroutine from line 20 time to finish, we could
+	// wait for second by uncommenting the line below, but this is hardly
+	// a good solution.
+	//time.Sleep(1 * time.Second)
 
-	}()
-	w.Wait()
-	print("Main routine")
+	printSomething("This is the second thing to be printed!")
 }
